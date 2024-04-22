@@ -16,8 +16,6 @@
 
 package com.lt.load_the_image.cache
 
-import java.util.Collections
-
 /**
  * creator: lt  2022/4/8  lt.dygzs@qq.com
  * effect : Memory cache configuration of network image, cache use LRU
@@ -27,13 +25,12 @@ open class ImageLruMemoryCache(
     private val maxMemorySize: Long = getMemoryWithOnePercent()
 ) : ImageCache {
     //image lru cache
-    private val cacheMap = Collections.synchronizedMap(
-        LinkedHashMap<String, ByteArray>(35, 1f, true)
-    )
+    private val cacheMap = LinkedHashMap<String, ByteArray>(35, 1f, true)
 
     //image cache byte size sum
     private var cacheSize: Long = 0
 
+    @Synchronized
     override fun saveCache(url: String, t: ByteArray) {
         if (t.size > maxMemorySize)
             return
@@ -45,6 +42,7 @@ open class ImageLruMemoryCache(
         }
     }
 
+    @Synchronized
     override fun getCache(url: String): ByteArray? {
         return cacheMap[url]
     }

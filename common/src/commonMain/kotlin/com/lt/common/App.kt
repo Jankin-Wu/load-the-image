@@ -17,6 +17,10 @@
 package com.lt.common
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -51,6 +55,28 @@ fun App(
     LazyColumn(state = lazyColumnState) {
         items(images) {
             Image(rememberImagePainter(it), "", Modifier.size(500.dp))
+        }
+    }
+}
+
+val moreImages = mutableListOf<String>().apply {
+    repeat(9999) {
+        add("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fbkimg.cdn.bcebos.com%2Fpic%2Ff9198618367adab44aed43580398a41c8701a18b4ed1&refer=http%3A%2F%2Fbkimg.cdn.bcebos.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1651992355&t=0eb27c606fc381fdaaaca828505ac114&a=$it&b=")
+    }
+}
+
+//更多图片测试
+@Composable
+fun MoreImage() {
+    LazyColumn(Modifier.fillMaxSize()) {
+        items(moreImages) {
+            Row(Modifier.height(50.dp)) {
+                repeat(10) { i ->
+                    Image(
+                        rememberImagePainter(it + i), "", Modifier.weight(1f).fillMaxHeight()
+                    )
+                }
+            }
         }
     }
 }

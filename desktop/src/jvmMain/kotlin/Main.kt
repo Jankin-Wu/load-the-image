@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import com.lt.common.App
+import com.lt.common.MoreImage
 import com.lt.load_the_image.LoadTheImageManager
 import com.lt.load_the_image.loader.DataToBeLoaded
 import com.lt.load_the_image.rememberImagePainter
@@ -46,7 +47,8 @@ fun main() {
         Window(onCloseRequest = ::exitApplication) {
             MaterialTheme {
                 //TestLazyList()
-                UI()
+                //UI()
+                MoreImage()
             }
         }
     }
