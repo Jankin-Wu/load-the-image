@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.lt.load_the_image.loader
+package com.lt.load_the_image.loader.image
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,6 +22,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.toComposeImageBitmap
 import com.lt.load_the_image.LoadTheImageManager
+import com.lt.load_the_image.loader.DataToBeLoaded
+import com.lt.load_the_image.loader.LoadTheImage
 import com.lt.load_the_image.painter.AsyncImagePainter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -41,9 +43,14 @@ open class HttpLoadTheImage : LoadTheImage {
         LaunchedEffect(url) {
             withContext(Dispatchers.IO) {
                 //Use cache
-                var byteArray =
-                    LoadTheImageManager.memoryCache.getCache(url)
-                        ?: LoadTheImageManager.fileCache.getCache(url)
+                var byteArray: ByteArray? = LoadTheImageManager.memoryCache.getCache(url)
+                if (byteArray == null) {
+                    byteArray = LoadTheImageManager.fileCache.getCache(url)
+                    if (byteArray != null) {
+                        LoadTheImageManager.memoryCache.saveCache(url, byteArray)
+                    }
+                }
+                //Http load
                 if (byteArray == null) {
                     val placeholderResource = data.placeholderResource
                     if (placeholderResource.isNotEmpty())
@@ -55,9 +62,9 @@ open class HttpLoadTheImage : LoadTheImage {
                         painter.imageBitmap.value = LoadTheImageManager.createErrorImageBitmap(data)
                         return@withContext
                     }
+                    LoadTheImageManager.memoryCache.saveCache(url, byteArray)
+                    LoadTheImageManager.fileCache.saveCache(url, byteArray)
                 }
-                LoadTheImageManager.memoryCache.saveCache(url, byteArray)
-                LoadTheImageManager.fileCache.saveCache(url, byteArray)
                 val imageBitmap = Image.makeFromEncoded(byteArray).toComposeImageBitmap()
                 painter.imageBitmap.value = imageBitmap
             }

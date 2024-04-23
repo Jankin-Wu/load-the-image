@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-package com.lt.load_the_image.loader
+package com.lt.load_the_image.loader.image
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.painter.Painter
 import com.lt.load_the_image.LoadTheImageManager
+import com.lt.load_the_image.loader.DataToBeLoaded
+import com.lt.load_the_image.loader.LoadTheImage
 import com.lt.load_the_image.painter.AsyncImagePainter
 import com.lt.load_the_image.util.println
 import kotlinx.coroutines.Dispatchers
@@ -44,21 +46,24 @@ open class FileLoadTheImage : LoadTheImage {
         val painter = remember(file.absolutePath) { AsyncImagePainter() }
         LaunchedEffect(file.absolutePath) {
             withContext(Dispatchers.IO) {
-                val byteArray = LoadTheImageManager.memoryCache.getCache(file.absolutePath) ?: try {
-                    val byteArray = file.readBytes()
-                    if (byteArray.isEmpty()) {
+                var byteArray: ByteArray? = LoadTheImageManager.memoryCache.getCache(file.absolutePath)
+                if (byteArray == null) {
+                    try {
+                        val array = file.readBytes()
+                        if (array.isEmpty()) {
+                            painter.imageBitmap.value =
+                                LoadTheImageManager.loadResourceImageBitmap(data.errorImagePath)
+                            return@withContext
+                        }
+                        LoadTheImageManager.memoryCache.saveCache(file.absolutePath, array)
+                        byteArray = array
+                    } catch (e: Exception) {
+                        e.println()
                         painter.imageBitmap.value =
                             LoadTheImageManager.loadResourceImageBitmap(data.errorImagePath)
                         return@withContext
                     }
-                    byteArray
-                } catch (e: Exception) {
-                    e.println()
-                    painter.imageBitmap.value =
-                        LoadTheImageManager.loadResourceImageBitmap(data.errorImagePath)
-                    return@withContext
                 }
-                LoadTheImageManager.memoryCache.saveCache(file.absolutePath, byteArray)
                 painter.imageBitmap.value =
                     try {
                         LoadTheImageManager.painterCreator.createImageBitmap(byteArray)

@@ -33,6 +33,7 @@ dependencies {
     implementation(compose.ui)
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
     implementation("com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:1.4.2")
+    implementation("com.squareup.okhttp3:okhttp:4.9.1")
 }
 
 publishing {

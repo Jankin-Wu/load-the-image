@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-package com.lt.load_the_image.loader
+package com.lt.load_the_image.loader.image
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.ClassLoaderResourceLoader
 import androidx.compose.ui.res.painterResource
+import com.lt.load_the_image.loader.DataToBeLoaded
+import com.lt.load_the_image.loader.LoadTheImage
 import com.lt.load_the_image.util.println
 
 /**

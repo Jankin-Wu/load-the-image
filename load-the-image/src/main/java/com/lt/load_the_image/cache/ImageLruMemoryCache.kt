@@ -42,7 +42,10 @@ open class ImageLruMemoryCache(
         cacheMap[url] = t
         cacheSize.getAndAdd(t.size.toLong())
         while (cacheSize.get() > maxMemorySize && cacheMap.isNotEmpty()) {
-            val byteArray = cacheMap.remove(cacheMap.keys.first())
+            val byteArray = cacheMap.remove(cacheMap.keys.firstOrNull() ?: run {
+                cacheSize.set(0)
+                return
+            })
             cacheSize.getAndAdd(-(byteArray?.size ?: 0).toLong())
         }
     }

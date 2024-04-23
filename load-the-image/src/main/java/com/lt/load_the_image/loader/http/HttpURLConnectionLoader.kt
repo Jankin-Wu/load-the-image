@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.lt.load_the_image.loader
+package com.lt.load_the_image.loader.http
 
 import com.lt.load_the_image.util.println
 import java.net.URL

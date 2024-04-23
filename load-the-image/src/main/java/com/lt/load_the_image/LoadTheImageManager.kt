@@ -28,6 +28,10 @@ import com.lt.load_the_image.cache.ImageCache
 import com.lt.load_the_image.cache.ImageFileCache
 import com.lt.load_the_image.cache.ImageLruMemoryCache
 import com.lt.load_the_image.loader.*
+import com.lt.load_the_image.loader.http.HttpLoader
+import com.lt.load_the_image.loader.http.HttpURLConnectionLoader
+import com.lt.load_the_image.loader.http.OkHttpLoader
+import com.lt.load_the_image.loader.image.*
 import com.lt.load_the_image.painter.DefaultPainterCreator
 import com.lt.load_the_image.painter.EmptyImagePainter
 import com.lt.load_the_image.painter.PainterCreator
@@ -49,7 +53,7 @@ object LoadTheImageManager {
     /**
      * Load network resource to byteArray
      */
-    var httpLoader: HttpLoader = HttpURLConnectionLoader()
+    var httpLoader: HttpLoader = OkHttpLoader()
 
     /**
      * Create Painter from ByteArray

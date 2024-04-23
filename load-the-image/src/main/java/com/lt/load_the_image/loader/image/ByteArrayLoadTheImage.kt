@@ -14,28 +14,28 @@
  * limitations under the License.
  */
 
-package com.lt.load_the_image.loader
+package com.lt.load_the_image.loader.image
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.graphics.asComposeImageBitmap
-import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
-import org.jetbrains.skia.Bitmap
+import com.lt.load_the_image.LoadTheImageManager
+import com.lt.load_the_image.loader.DataToBeLoaded
+import com.lt.load_the_image.loader.LoadTheImage
 
 /**
  * creator: lt  2022/6/1  lt.dygzs@qq.com
- * effect : Load the image from [Bitmap]
+ * effect : Load the image from [ByteArray] of image
  * warning:
  */
-class BitmapLoadTheImage : LoadTheImage {
+class ByteArrayLoadTheImage : LoadTheImage {
     @Composable
     override fun load(data: DataToBeLoaded): Painter? {
-        val bitmap = data.data as? Bitmap ?: return null
-        return remember(bitmap) { BitmapPainter(bitmap.asComposeImageBitmap()) }
+        val byteArray = data.data as? ByteArray ?: return null
+        return remember(byteArray) { LoadTheImageManager.painterCreator.create(byteArray) }
     }
 
     override fun canLoad(data: DataToBeLoaded): Boolean {
-        return data.data is Bitmap
+        return data.data is ByteArray
     }
 }

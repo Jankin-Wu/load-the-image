@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.lt.load_the_image.loader
+package com.lt.load_the_image.loader.http
 
 /**
  * creator: lt  2022/4/8  lt.dygzs@qq.com
