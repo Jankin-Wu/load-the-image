@@ -16,6 +16,9 @@
 
 package com.lt.load_the_image.cache
 
+import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap
+import java.util.concurrent.atomic.AtomicLong
+
 /**
  * creator: lt  2022/4/8  lt.dygzs@qq.com
  * effect : Memory cache configuration of network image, cache use LRU
@@ -25,24 +28,25 @@ open class ImageLruMemoryCache(
     private val maxMemorySize: Long = getMemoryWithOnePercent()
 ) : ImageCache {
     //image lru cache
-    private val cacheMap = LinkedHashMap<String, ByteArray>(35, 1f, true)
+    private val cacheMap = ConcurrentLinkedHashMap.Builder<String, ByteArray>()
+        .initialCapacity(35)
+        .maximumWeightedCapacity(9999)
+        .build()
 
     //image cache byte size sum
-    private var cacheSize: Long = 0
+    private var cacheSize = AtomicLong(0)
 
-    @Synchronized
     override fun saveCache(url: String, t: ByteArray) {
         if (t.size > maxMemorySize)
             return
         cacheMap[url] = t
-        cacheSize += t.size
-        while (cacheSize > maxMemorySize && cacheMap.isNotEmpty()) {
+        cacheSize.getAndAdd(t.size.toLong())
+        while (cacheSize.get() > maxMemorySize && cacheMap.isNotEmpty()) {
             val byteArray = cacheMap.remove(cacheMap.keys.first())
-            cacheSize -= byteArray?.size ?: 0
+            cacheSize.getAndAdd(-(byteArray?.size ?: 0).toLong())
         }
     }
 
-    @Synchronized
     override fun getCache(url: String): ByteArray? {
         return cacheMap[url]
     }

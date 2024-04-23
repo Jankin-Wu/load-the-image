@@ -32,6 +32,7 @@ java {
 dependencies {
     implementation(compose.ui)
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
+    implementation("com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:1.4.2")
 }
 
 publishing {
